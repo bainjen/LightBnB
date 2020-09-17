@@ -82,8 +82,21 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function (guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  const queryString = `SELECT properties.*, reservations.*, avg(rating) as average_rating
+  FROM reservations
+  JOIN properties ON reservations.property_id = properties.id
+  JOIN property_reviews ON properties.id = property_reviews.property_id 
+  WHERE reservations.guest_id = $1
+  AND reservations.end_date < now()::date
+  GROUP BY properties.id, reservations.id
+  ORDER BY reservations.start_date
+  LIMIT $2;`; 
+  const values = [guest_id, limit];
+  return pool.query(queryString, values)
+  .then(res => res.rows)
+  .catch(err => { return console.log('query error:', err); })
 }
+
 exports.getAllReservations = getAllReservations;
 
 /// Properties
@@ -119,7 +132,7 @@ const addProperty = function (property) {
 exports.addProperty = addProperty;
 
 
-// console.log(getUserWithId(8).then(user=> console.log(user)));
+console.log(getUserWithId(1).then(user=> console.log(user)));
 
 // console.log(getUserWithEmail("elizabethyork@ymail.com")
 //   .then(user => console.log(user)));
@@ -129,3 +142,6 @@ exports.addProperty = addProperty;
 
 // console.log(addUser({ name: "GatoDeluxe", email: "gdocircus@hello.com", password: "butts" })
 //   .then(user => console.log(user)));
+
+// getAllReservations
+// console.log(getAllReservations(1, limit=10) .then(user => console.log(user)));
