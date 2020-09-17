@@ -19,16 +19,16 @@ const pool = new Pool({
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  let user;
-  for (const userId in users) {
-    user = users[userId];
-    if (user.email.toLowerCase() === email.toLowerCase()) {
-      break;
-    } else {
-      user = null;
-    }
-  }
-  return Promise.resolve(user);
+  // let user;
+  // for (const userId in users) {
+  //   user = users[userId];
+  //   if (user.email.toLowerCase() === email.toLowerCase()) {
+  //     break;
+  //   } else {
+  //     user = null;
+  //   }
+  // }
+  // return Promise.resolve(user);
 }
 exports.getUserWithEmail = getUserWithEmail;
 
@@ -38,10 +38,16 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function(id) {
-  return Promise.resolve(users[id]);
+  
+    return pool.query(`SELECT *
+    FROM users
+    WHERE id = $1;`, [id])
+    .then(res => res.rows[0])
+    // return Promise.resolve(users[id]);
+
+  // return Promise.resolve(users[id]);
 }
 exports.getUserWithId = getUserWithId;
-
 
 /**
  * Add a new user to the database.
@@ -83,15 +89,7 @@ exports.getAllReservations = getAllReservations;
 //   }
 //   return Promise.resolve(limitedProperties);
 // }
-// const getAllProperties = function(options, limit = 10) {
-//   return pool.query(`
-//   SELECT * FROM properties
-//   LIMIT $1
-//   `, [limit])
-//   .then(res => {
-//     return res.rows 
-//   });
-// }
+
 const getAllProperties = function(options, limit = 10) {
   return pool.query(`
   SELECT * FROM properties
@@ -100,7 +98,7 @@ const getAllProperties = function(options, limit = 10) {
   .then(res => res.rows);
 }
 exports.getAllProperties = getAllProperties;
-
+//test code console.log(getUserWithId(8).then(user=> console.log(user)));
 
 /**
  * Add a property to the database
@@ -114,3 +112,6 @@ const addProperty = function(property) {
   return Promise.resolve(property);
 }
 exports.addProperty = addProperty;
+
+ 
+console.log(getUserWithId(8).then(user=> console.log(user)));
