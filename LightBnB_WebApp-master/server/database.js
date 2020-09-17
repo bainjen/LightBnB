@@ -1,7 +1,6 @@
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
-// const pg = require('pg');
-// const Client = pg.Client;
+// const db = require('./db');
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -57,11 +56,22 @@ exports.getUserWithId = getUserWithId;
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser = function (user) {
-  const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+  // const userId = Object.keys(users).length + 1;
+  // user.id = userId;
+  // users[userId] = user;
+  // return Promise.resolve(user);
+  const queryString = `INSERT INTO users (name, email, password)
+  VALUES ($1, $2, $3)
+  RETURNING *;`
+  const values = [user.name, user.email, user.password];
+  return pool.query(queryString, values)
+    .then(res => res.rows[0])
+    .catch(err => { return console.log('query error:', err); })
 }
+//testcode
+// console.log(addUser({ name: "GatoDeluxe", email: "gdocircus@hello.com", password: "butts" })
+//   .then(user => console.log(user)));
+
 exports.addUser = addUser;
 
 /// Reservations
@@ -114,5 +124,8 @@ exports.addProperty = addProperty;
 // console.log(getUserWithEmail("elizabethyork@ymail.com")
 //   .then(user => console.log(user)));
 
-  // console.log(getUserWithEmail2("allisonjackson@mail.comq")
-  // .then(user => console.log(user)));
+// console.log(getUserWithEmail2("allisonjackson@mail.comq")
+// .then(user => console.log(user)));
+
+// console.log(addUser({ name: "GatoDeluxe", email: "gdocircus@hello.com", password: "butts" })
+//   .then(user => console.log(user)));
