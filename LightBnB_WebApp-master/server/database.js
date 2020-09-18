@@ -186,32 +186,6 @@ const addProperty = function (property) {
     .catch(err => { return console.log('promise error on addProperty:', err); });
 }
 exports.addProperty = addProperty;
-// const propertyId = Object.keys(properties).length + 1;
-// property.id = propertyId;
-// properties[propertyId] = property;
-// return Promise.resolve(property);
-// const values = [$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14];
-// const queryString = `INSERT INTO properties`
-// return pool.query()
-
-// console.log(addProperty({
-//   "title": "prairie",
-//   "description": "is very cute",
-//   "number_of_bedrooms": "2",
-//   "number_of_bathrooms": "2",
-//   "parking_spaces": "1",
-//   "cost_per_night": "69",
-//   "thumbnail_photo_url": "",
-//   "cover_photo_url": "",
-//   "street": "100-804 18 Ave SW, CALGARY AB T2T 0G8, CANADA",
-//   "country": "US",
-//   "city": "Calgary",
-//   "province": "AB - Alberta",
-//   "post_code": "T2T 0G8",
-//   "owner_id": 1,
-//   "id": 1001
-// })); 
-
 
 // ++++++++++TEST CONSOLE LOGS+++++++++++++++++=
 
